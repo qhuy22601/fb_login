@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Friend</title>
+</head>
+<body>
+    <h1>Add Friend</h1>
+    <button onclick="addFriend()">Add Friend</button>
+    
+    <script>
+        // Hàm để gửi yêu cầu thêm bạn bè
+        function addFriend() {
+            const userId = "YOUR_USER_ID"; // Thay đổi thành ID người dùng của bạn
+            const friendId = "FRIEND_ID_TO_ADD"; // Thay đổi thành ID bạn bè mà bạn muốn thêm
+
+            fetch(`http://localhost:5000/api/auth/${userId}/add/${friendId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ userId, friendId })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to add friend');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data.message); // Log tin nhắn từ máy chủ
+                alert(data.message); // Hiển thị thông báo thành công
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to add friend');
+            });
+        }
+    </script>
+</body>
+</html>

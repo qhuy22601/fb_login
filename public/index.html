@@ -1,0 +1,392 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Friend</title>
+</head>
+<body>
+    <h1>Add Friend</h1>
+    <button onclick="addFriend()">Add Friend</button>
+    
+    <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
+    <script>
+        const socket = io('http://localhost:5000'); 
+
+        function addFriend() {
+            const userId = "1"; 
+            const friendId = "2"; 
+
+            fetch(`http://localhost:5000/api/auth/${userId}/add/${friendId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ userId, friendId })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to add friend');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data.message); // Log tin nhắn từ máy chủ
+                alert(data.message); // Hiển thị thông báo thành công
+
+                // Sau khi bạn bè được thêm thành công, gửi một thông báo qua Socket.IO
+                socket.emit('addFriend', { userId, friendId });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to add friend');
+            });
+        }
+    </script>
+</body>
+</html> -->
+
+
+<!-- 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Socket.io Friend Tracker</title>
+  <script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
+</head>
+<body>
+  <h1>Socket.io Friend Tracker</h1>
+
+  <div>
+    <h2>Register User</h2>
+    <input type="text" id="registerUserId" placeholder="User ID">
+    <button onclick="register()">Register</button>
+  </div>
+
+  <div>
+    <h2>Send Friend Request</h2>
+    <input type="text" id="senderId" placeholder="Sender ID">
+    <input type="text" id="receiverId" placeholder="Receiver ID">
+    <button onclick="sendFriendRequest()">Send Friend Request</button>
+  </div>
+
+  <div>
+    <h2>Accept Friend Request</h2>
+    <input type="text" id="acceptReceiverId" placeholder="Receiver ID">
+    <input type="text" id="acceptSenderId" placeholder="Sender ID">
+    <button onclick="acceptFriendRequest()">Accept Friend Request</button>
+  </div>
+
+  <div>
+    <h2>Find Friend</h2>
+    <input type="text" id="findPhoneNumber" placeholder="Friend's Phone Number">
+    <button onclick="findFriend()">Find Friend</button>
+  </div>
+
+  <div>
+    <h2>Track Friend</h2>
+    <input type="text" id="trackUserId" placeholder="User ID">
+    <input type="text" id="locationX" placeholder="Location X">
+    <input type="text" id="locationY" placeholder="Location Y">
+    <button onclick="trackFriend()">Track Friend</button>
+  </div>
+
+  <script>
+    const socket = io('http://localhost:5000');
+
+    socket.on('connect', () => {
+      console.log('Connected to the server');
+    });
+
+    function register() {
+      const userId = document.getElementById('registerUserId').value;
+      socket.emit('register', userId);
+      console.log(`Registered user ${userId}`);
+    }
+
+    function sendFriendRequest() {
+      const senderId = document.getElementById('senderId').value;
+      const receiverId = document.getElementById('receiverId').value;
+      socket.emit('send-friend-request', { senderId, receiverId });
+      console.log(`Sent friend request from ${senderId} to ${receiverId}`);
+    }
+
+    function acceptFriendRequest() {
+      const receiverId = document.getElementById('acceptReceiverId').value;
+      const senderId = document.getElementById('acceptSenderId').value;
+      socket.emit('accept-friend-request', { receiverId, senderId });
+      console.log(`Accepted friend request from ${senderId} by ${receiverId}`);
+    }
+
+    function findFriend() {
+      const phoneNumber = document.getElementById('findPhoneNumber').value;
+      socket.emit('find-friend', { phoneNumber });
+      socket.on('finded', (user) => {
+        console.log('User found:', user);
+      });
+      socket.on('error-finding', (error) => {
+        console.log('Error finding user:', error);
+      });
+    }
+
+    function trackFriend() {
+      const userId = document.getElementById('trackUserId').value;
+      const locationX = document.getElementById('locationX').value;
+      const locationY = document.getElementById('locationY').value;
+      socket.emit('tracking', { userId, locationX, locationY });
+      console.log(`Tracking user ${userId} at location (${locationX}, ${locationY})`);
+    }
+
+    socket.on('friend-request', ({ senderId }) => {
+      console.log(`Received friend request from ${senderId}`);
+    });
+
+    socket.on('friend-accepted', ({ receiverId }) => {
+      console.log(`Friend request accepted by ${receiverId}`);
+    });
+
+    socket.on('location-update', ({ userId, locationX, locationY }) => {
+      console.log(`User ${userId} is now at location (${locationX}, ${locationY})`);
+    });
+
+    socket.on('error', (error) => {
+      console.log('Error:', error);
+    });
+  </script>
+</body>
+</html> -->
+
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Friend</title>
+</head>
+<body>
+    <h1>Add Friend</h1>
+    <button onclick="addFriend()">Add Friend</button>
+    
+    <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
+    <script>
+        const socket = io('http://localhost:5000'); 
+
+        function addFriend() {
+            const userId = "1"; 
+            const friendId = "2"; 
+
+            fetch(`http://localhost:5000/api/auth/${userId}/add/${friendId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ userId, friendId })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to add friend');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data.message); // Log tin nhắn từ máy chủ
+                alert(data.message); // Hiển thị thông báo thành công
+
+                // Sau khi bạn bè được thêm thành công, gửi một thông báo qua Socket.IO
+                socket.emit('addFriend', { userId, friendId });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to add friend');
+            });
+        }
+    </script>
+</body>
+</html> -->
+
+
+<!-- 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Socket.io Friend Tracker</title>
+  <script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
+</head>
+<body>
+  <h1>Socket.io Friend Tracker</h1>
+
+  <div>
+    <h2>Register User</h2>
+    <input type="text" id="registerUserId" placeholder="User ID">
+    <button onclick="register()">Register</button>
+  </div>
+
+  <div>
+    <h2>Send Friend Request</h2>
+    <input type="text" id="senderId" placeholder="Sender ID">
+    <input type="text" id="receiverId" placeholder="Receiver ID">
+    <button onclick="sendFriendRequest()">Send Friend Request</button>
+  </div>
+
+  <div>
+    <h2>Accept Friend Request</h2>
+    <input type="text" id="acceptReceiverId" placeholder="Receiver ID">
+    <input type="text" id="acceptSenderId" placeholder="Sender ID">
+    <button onclick="acceptFriendRequest()">Accept Friend Request</button>
+  </div>
+
+  <div>
+    <h2>Find Friend</h2>
+    <input type="text" id="findPhoneNumber" placeholder="Friend's Phone Number">
+    <button onclick="findFriend()">Find Friend</button>
+  </div>
+
+  <div>
+    <h2>Track Friend</h2>
+    <input type="text" id="trackUserId" placeholder="User ID">
+    <input type="text" id="locationX" placeholder="Location X">
+    <input type="text" id="locationY" placeholder="Location Y">
+    <button onclick="trackFriend()">Track Friend</button>
+  </div>
+
+  <script>
+    const socket = io('http://localhost:5000');
+
+    socket.on('connect', () => {
+      console.log('Connected to the server');
+    });
+
+    function register() {
+      const userId = document.getElementById('registerUserId').value;
+      socket.emit('register', userId);
+      console.log(`Registered user ${userId}`);
+    }
+
+    function sendFriendRequest() {
+      const senderId = document.getElementById('senderId').value;
+      const receiverId = document.getElementById('receiverId').value;
+      socket.emit('send-friend-request', { senderId, receiverId });
+      console.log(`Sent friend request from ${senderId} to ${receiverId}`);
+    }
+
+    function acceptFriendRequest() {
+      const receiverId = document.getElementById('acceptReceiverId').value;
+      const senderId = document.getElementById('acceptSenderId').value;
+      socket.emit('accept-friend-request', { receiverId, senderId });
+      console.log(`Accepted friend request from ${senderId} by ${receiverId}`);
+    }
+
+    function findFriend() {
+      const phoneNumber = document.getElementById('findPhoneNumber').value;
+      socket.emit('find-friend', { phoneNumber });
+      socket.on('finded', (user) => {
+        console.log('User found:', user);
+      });
+      socket.on('error-finding', (error) => {
+        console.log('Error finding user:', error);
+      });
+    }
+
+    function trackFriend() {
+      const userId = document.getElementById('trackUserId').value;
+      const locationX = document.getElementById('locationX').value;
+      const locationY = document.getElementById('locationY').value;
+      socket.emit('tracking', { userId, locationX, locationY });
+      console.log(`Tracking user ${userId} at location (${locationX}, ${locationY})`);
+    }
+
+    socket.on('friend-request', ({ senderId }) => {
+      console.log(`Received friend request from ${senderId}`);
+    });
+
+    socket.on('friend-accepted', ({ receiverId }) => {
+      console.log(`Friend request accepted by ${receiverId}`);
+    });
+
+    socket.on('location-update', ({ userId, locationX, locationY }) => {
+      console.log(`User ${userId} is now at location (${locationX}, ${locationY})`);
+    });
+
+    socket.on('error', (error) => {
+      console.log('Error:', error);
+    });
+  </script>
+</body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Facebook Login Integration</title>
+  </head>
+  <body>
+
+    <h2>Add Facebook Login to your webpage</h2>
+    
+    <!-- Add a login button -->
+    <button onclick="checkLoginState();">Login with Facebook</button>
+
+    <!-- Set the element id for the JSON response -->
+    <p id="profile"></p>
+
+    <!-- Add the Facebook SDK for Javascript -->
+    <script>
+      (function(d, s, id){
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) {return;}
+        js = d.createElement(s); js.id = id;
+        js.src = "https://connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
+
+      window.fbAsyncInit = function() {
+        // Initialize the SDK with your app and the Graph API version for your app
+        FB.init({
+          appId            : '3316136372023287',
+          xfbml            : true,
+          version          : 'v20.0' // Replace with the Graph API version you're using
+        });
+
+        FB.getLoginStatus(function(response) {
+          statusChangeCallback(response);
+        });
+      };
+
+      function checkLoginState() {
+        FB.getLoginStatus(function(response) {
+          statusChangeCallback(response);
+        });
+      }
+
+      function statusChangeCallback(response) {
+        if (response.status === 'connected') {
+          // Logged into your app and Facebook.
+          FB.api('/me', {fields: 'name, email'}, function(response) {
+            document.getElementById('profile').innerHTML = 
+              'Good to see you, ' + response.name + '. I see your email address is ' + response.email;
+          });
+        } else {
+          // The person is not logged into your app or we are unable to tell.
+          FB.login(function(response) {
+            if (response.authResponse) {
+              FB.api('/me', {fields: 'name, email'}, function(response) {
+                document.getElementById('profile').innerHTML = 
+                  'Good to see you, ' + response.name + '. I see your email address is ' + response.email;
+              });
+            } else {
+              console.log('User cancelled login or did not fully authorize.');
+            }
+          }, {scope: 'email'});
+        }
+      }
+    </script>
+
+  </body>
+</html>

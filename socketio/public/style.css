@@ -1,0 +1,42 @@
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.inbox__people {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.inbox__messages {
+    border: 1px solid #ddd;
+    padding: 10px;
+    /* background-color: #fff; */
+    border-radius: 5px;
+}
+
+.message_form {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.message_form__input {
+    flex-grow: 1;
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+}
+
+.message_form__button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+}
